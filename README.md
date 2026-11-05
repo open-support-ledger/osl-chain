@@ -42,11 +42,35 @@ Use **Stellar testnet** for all development and tests. Tests must run on fixture
 
 Run lint, format check, typecheck, test, and build before opening a PR. CI runs the same steps.
 
+## Usage
+
+### Validation helpers
+
+```ts
+import {
+  isValidMemoText,
+  isValidPublicKey,
+  memoTextByteLength,
+} from "@open-support-ledger/chain";
+
+// Standard G... account keys only (no secret, muxed or contract addresses).
+isValidPublicKey("GAAZI4TCR3TY5OJHCTJC2A4QSY6CJWJH5IAJTGKIN2ER7LBNVKOCCWN7"); // true
+isValidPublicKey("not a key"); // false
+
+// A text memo is limited to 28 bytes, not 28 characters.
+memoTextByteLength("é"); // 2
+isValidMemoText("osl-ref-1234"); // true
+isValidMemoText("é".repeat(15)); // false (30 bytes)
+```
+
+Key validation uses `@stellar/stellar-base` (`StrKey`), the smaller of the two Stellar JS packages and all this library needs; the full `@stellar/stellar-sdk` adds the network client, which this package does not use here.
+
 ## Project structure
 
 ```
 src/
   index.ts        public exports
+  validation.ts   public key and memo validation helpers
   *.test.ts       tests, next to the code they cover
 ```
 
