@@ -8,3 +8,11 @@ export {
   isValidPublicKey,
   memoTextByteLength,
 } from "./validation.js";
+
+export {
+  PAY_URI_MESSAGE_MAX_LENGTH,
+  PayUriError,
+  TESTNET_NETWORK_PASSPHRASE,
+  buildPayUri,
+} from "./pay-uri.js";
+export type { PayUriAsset, PayUriOptions } from "./pay-uri.js";

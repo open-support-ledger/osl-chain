@@ -65,12 +65,42 @@ isValidMemoText("é".repeat(15)); // false (30 bytes)
 
 Key validation uses `@stellar/stellar-base` (`StrKey`), the smaller of the two Stellar JS packages and all this library needs; the full `@stellar/stellar-sdk` adds the network client, which this package does not use here.
 
+### SEP-7 payment links
+
+`buildPayUri` builds a [SEP-7](https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0007.md) (v2.1.0) `pay` URI that any compatible wallet can open. Amounts are decimal strings, never floats, with at most 7 decimal places. Invalid input throws a `PayUriError`.
+
+```ts
+import {
+  TESTNET_NETWORK_PASSPHRASE,
+  buildPayUri,
+} from "@open-support-ledger/chain";
+
+const uri = buildPayUri({
+  destination: "GCALNQQBXAPZ2WIRSDDBMSTAKCUH5SG6U76YBFLQLIXJTF7FE5AX7AOO",
+  amount: "10",
+  asset: {
+    code: "USDC",
+    issuer: "GCRCUE2C5TBNIPYHMEP7NK5RWTT2WBSZ75CMARH7GDOHDDCQH3XANFOB",
+  }, // omit for XLM
+  memo: "osl-ref-1234", // text memo, max 28 bytes, written on-chain
+  message: "Thanks for the project!", // shown in the wallet, max 300 characters, not on-chain
+  networkPassphrase: TESTNET_NETWORK_PASSPHRASE, // testnet only, see below
+});
+
+// Use it as a link (wallets register the web+stellar: scheme)...
+// <a href={uri}>Pay with a Stellar wallet</a>
+// ...or render it as a QR code.
+```
+
+**Is `networkPassphrase` needed for testnet?** Yes. SEP-7 says `network_passphrase` is only needed for networks other than the public network, so testnet links must set it (use `TESTNET_NETWORK_PASSPHRASE`) and mainnet links must omit it.
+
 ## Project structure
 
 ```
 src/
   index.ts        public exports
   validation.ts   public key and memo validation helpers
+  pay-uri.ts      SEP-7 payment URI builder
   *.test.ts       tests, next to the code they cover
 ```
 
