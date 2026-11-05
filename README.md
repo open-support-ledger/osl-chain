@@ -32,15 +32,18 @@ Use **Stellar testnet** for all development and tests. Tests must run on fixture
 
 ## Scripts
 
-| Command                             | What it does                            |
-| ----------------------------------- | --------------------------------------- |
-| `pnpm build`                        | Compile to `dist/`                      |
-| `pnpm lint`                         | Lint with oxlint                        |
-| `pnpm format` / `pnpm format:check` | Format with Prettier / check formatting |
-| `pnpm typecheck`                    | Type-check without emitting             |
-| `pnpm test`                         | Unit tests (Vitest)                     |
+| Command                             | What it does                                      |
+| ----------------------------------- | ------------------------------------------------- |
+| `pnpm build`                        | Compile to `dist/`                                |
+| `pnpm lint`                         | Lint with oxlint                                  |
+| `pnpm format` / `pnpm format:check` | Format with Prettier / check formatting           |
+| `pnpm typecheck`                    | Type-check without emitting                       |
+| `pnpm test`                         | Unit tests (Vitest)                               |
+| `pnpm check:package`                | Verify the built package (run after `pnpm build`) |
 
-Run lint, format check, typecheck, test, and build before opening a PR. CI runs the same steps.
+`pnpm check:package` runs [publint](https://publint.dev) (entry points exist, `exports` is valid), [Are the Types Wrong?](https://arethetypeswrong.github.io) in ESM-only mode (typings resolve), a check that `npm pack` publishes only `dist/` and metadata, and a smoke test importing the built package by name like a consumer.
+
+Run lint, format check, typecheck, test, build, and `pnpm check:package` before opening a PR. CI runs the same steps.
 
 ## Project structure
 
